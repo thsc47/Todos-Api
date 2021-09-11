@@ -8,7 +8,16 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/new-task", async (req, res) => {
+app.get("/todos", async (req, res) => {
+    try {
+        const allTasks = await Todo.find();
+        res.json(allTasks);
+    } catch (error) {
+        
+    }
+})
+
+app.post("/todos", async (req, res) => {
   try {
     const newTask = await Todo.create(req.body);
     res.status(201).json(newTask);
