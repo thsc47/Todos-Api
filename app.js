@@ -1,12 +1,14 @@
 const express = require("express");
 const dbConnect = require("./config/db.config");
 const Todo = require("./models/Todo");
+const cors = require('cors')
 
 dbConnect();
 
 const app = express();
 
 app.use(express.json());
+app.use(cors())
 
 app.get("/todos", async (req, res) => {
   try {
@@ -40,9 +42,13 @@ app.put("/todos/:id", async (req, res) => {
 });
 
 app.delete("/todos/:id", async (req, res) => {
-    const {id} = req.params;
+  try {
+    const { id } = req.params;
     const deletedTodo = await Todo.findOneAndDelete(id);
-    res.status(204).json()
+    res.status(204).json();
+  } catch (error) {
+    res.status(500).json({ msg: "Error on delete a document", error });
+  }
 });
 
 app.listen(5000, () => {
