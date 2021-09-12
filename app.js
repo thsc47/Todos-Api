@@ -44,7 +44,7 @@ app.put("/todos/:id", async (req, res) => {
 app.delete("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedTodo = await Todo.findOneAndDelete(id);
+    const deletedTodo = await Todo.findByIdAndDelete(id);
     res.status(204).json();
   } catch (error) {
     res.status(500).json({ msg: "Error on delete a document", error });
