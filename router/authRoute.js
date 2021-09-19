@@ -12,7 +12,16 @@ router.post("/login", async (req, res) => {
     if (user) {
       const validation = bcrypt.compareSync(password, user.password);
       if (validation) {
-        res.json(user);
+        const payload = {
+          id: user.id,
+          username: user.username,
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SIGN, {
+          expiresIn: "1day",
+        });
+
+        res.json({payload, token});
       } else {
         throw new Error("User or password incorret");
       }

@@ -14,8 +14,10 @@ router.get("/user", async (req, res) => {
   }
 });
 
-router.put("/user/:id/:todo", async (req, res) => {
-  const { id, todo } = req.params;
+router.put("/user/:todo", async (req, res) => {
+  const { todo } = req.params;
+  const { id } = req.user
+  console.log(req.user.id)
   try {
     const addedTodo = await User.findByIdAndUpdate(
       id,

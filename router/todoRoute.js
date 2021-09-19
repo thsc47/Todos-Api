@@ -13,8 +13,9 @@ router.get("/todos", async (req, res) => {
 });
 
 router.post("/todos", async (req, res) => {
+  const payload = {...req.body,user: req.user.id};
   try {
-    const newTask = await Todo.create(req.body);
+    const newTask = await Todo.create(payload);
     res.status(201).json(newTask);
   } catch (error) {
     res.status(500).json({ msg: "Error on create a new Todo", error });
@@ -22,10 +23,10 @@ router.post("/todos", async (req, res) => {
 });
 
 router.put("/todos/:id", async (req, res) => {
+  const { id } = req.params;
+  const payload = {...req.body,user: req.user.id};
   try {
-    const { id } = req.params;
-    const body = req.body;
-    const updatedTask = await Todo.findOneAndUpdate({ _id: `${id}` }, body, {
+    const updatedTask = await Todo.findOneAndUpdate({ _id: `${id}` }, payload, {
       new: true,
     });
     res.status(200).json({ msg: `The ${id} was updated` });
