@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Todo = require("../models/Todo");
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/user", async (req, res) => {
   try {
     const allUser = await User.find().populate("todos");
     res.json(allUser);
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/:id/:todo", async (req, res) => {
+router.put("/user/:id/:todo", async (req, res) => {
   const { id, todo } = req.params;
   try {
     const addedTodo = await User.findByIdAndUpdate(

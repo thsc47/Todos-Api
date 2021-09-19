@@ -13,9 +13,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors())
-app.use('/todos', todoRouter)
-app.use('/signin', authRouter)
-app.use('/user', userRouter)
+app.use('/', todoRouter)
+app.use('/', authRouter)
+app.use('/', userRouter)
 
 
 app.listen(process.env.PORT, () => {

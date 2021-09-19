@@ -3,16 +3,16 @@ const router = Router();
 
 const Todo = require("../models/Todo");
 
-router.get("/", async (req, res) => {
+router.get("/todos", async (req, res) => {
   try {
-    const allTasks = await Todo.find();
+    const allTasks = await Todo.find().populate('user');
     res.json(allTasks);
   } catch (error) {
     res.status(500).json({ msg: "Error on find all Todos", error });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/todos", async (req, res) => {
   try {
     const newTask = await Todo.create(req.body);
     res.status(201).json(newTask);
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
@@ -34,7 +34,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletedTodo = await Todo.findOneAndDelete(id);
