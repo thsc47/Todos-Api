@@ -2,10 +2,11 @@ const { Router } = require("express");
 const router = Router();
 
 const Todo = require("../models/Todo");
+const User = require("../models/User");
 
 router.get("/todos", async (req, res) => {
   try {
-    const allTasks = await Todo.find().populate('user');
+    const allTasks = await Todo.find();
     res.json(allTasks);
   } catch (error) {
     res.status(500).json({ msg: "Error on find all Todos", error });
@@ -13,9 +14,14 @@ router.get("/todos", async (req, res) => {
 });
 
 router.post("/todos", async (req, res) => {
-  const payload = {...req.body,user: req.user.id};
+  const payload = { ...req.body, user: req.user.id };
   try {
     const newTask = await Todo.create(payload);
+    const addedTodo = await User.findOneAndUpdate(
+      req.user.id,
+      { $push: { todos: newTask._id } },
+      { new: true }
+    );
     res.status(201).json(newTask);
   } catch (error) {
     res.status(500).json({ msg: "Error on create a new Todo", error });
@@ -24,7 +30,7 @@ router.post("/todos", async (req, res) => {
 
 router.put("/todos/:id", async (req, res) => {
   const { id } = req.params;
-  const payload = {...req.body,user: req.user.id};
+  const payload = { ...req.body, user: req.user.id };
   try {
     const updatedTask = await Todo.findOneAndUpdate({ _id: `${id}` }, payload, {
       new: true,
